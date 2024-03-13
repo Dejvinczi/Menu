@@ -4,7 +4,7 @@ target-version = ['py37', 'py38', 'py39', 'py310']
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "app.settings"
-addopts = "--cov"
+addopts = "--cov --cov-report=term"
 
 [tool.coverage.run]
 omit = [
