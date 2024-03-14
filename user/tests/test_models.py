@@ -1,5 +1,5 @@
 """
-User application models tests.
+User module models tests.
 """
 
 import pytest
@@ -27,7 +27,7 @@ class TestUser:
             "password": "testuser123",
         }
         with pytest.raises(ValueError) as e_info:
-            user = get_user_model().objects.create_user(**user_data)
+            get_user_model().objects.create_user(**user_data)
 
         assert str(e_info.value) == "User must have an email address."
 
@@ -47,6 +47,6 @@ class TestUser:
             "password": "testsuperuser123",
         }
         with pytest.raises(ValueError) as e_info:
-            user = get_user_model().objects.create_superuser(**user_data)
+            get_user_model().objects.create_superuser(**user_data)
 
         assert str(e_info.value) == "User must have an email address."
