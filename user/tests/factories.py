@@ -1,5 +1,5 @@
 """
-User app models factories.
+User module models factories.
 """
 
 import factory
