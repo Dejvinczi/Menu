@@ -6,7 +6,6 @@ import pytest
 from datetime import timedelta
 
 from ..models import Menu, Dish
-from .factories import MenuFactory
 
 
 @pytest.mark.django_db
@@ -21,9 +20,9 @@ class TestMenuModel:
         for k, v in menu_data.items():
             assert getattr(menu, k, None) == v
 
-    def test_create_dish_successful(self):
+    def test_create_dish_successful(self, menu_factory):
         """Test creating new dish."""
-        menu = MenuFactory.create()
+        menu = menu_factory.create()
 
         dish_data = {
             "menu": menu,

@@ -16,7 +16,10 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import (
+    path,
+    include,
+)
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -38,4 +41,5 @@ urlpatterns = [
         name="redoc",
     ),
     path("api/user/", include("user.api.urls")),
+    path("api/menu/", include("menu.api.urls")),
 ]

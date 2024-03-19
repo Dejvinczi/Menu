@@ -25,6 +25,6 @@ class Dish(models.Model):
     description = models.TextField(max_length=500, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     preparation_time = models.DurationField()
+    is_vegetarian = models.BooleanField(default=False)
     added_on = models.DateField(auto_now_add=True)
     updated_on = models.DateField(auto_now=True)
-    is_vegetarian = models.BooleanField(default=False)
