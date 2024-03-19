@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 @pytest.fixture
-def user_factory_model():
+def user_factory():
     """Fixture to provide User Factory."""
     return UserFactory
 

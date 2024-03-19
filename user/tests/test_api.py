@@ -36,14 +36,14 @@ class TestPublicUserAPI:
         user = django_user_model.objects.get(email=payload["email"])
         assert user.check_password(payload["password"])
 
-    def test_register_user_email_unique_error(self, client, user_factory_model):
+    def test_register_user_email_unique_error(self, client, user_factory):
         """Test of creating user with email unique error."""
         payload = {
             "username": "anothertestuser1",
             "email": "testuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(email=payload["email"])
+        user_factory.create(email=payload["email"])
         response = client.post(REGISTER_USER_URL, data=payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -51,14 +51,14 @@ class TestPublicUserAPI:
         assert len(response.data["email"]) == 1
         assert response.data["email"][0].code == "unique"
 
-    def test_register_user_username_unique_error(self, client, user_factory_model):
+    def test_register_user_username_unique_error(self, client, user_factory):
         """Test of creating user with username unique error."""
         payload = {
             "username": "testuser1",
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(username=payload["username"])
+        user_factory.create(username=payload["username"])
         response = client.post(REGISTER_USER_URL, data=payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -66,14 +66,14 @@ class TestPublicUserAPI:
         assert len(response.data["username"]) == 1
         assert response.data["username"][0].code == "unique"
 
-    def test_obtain_token_pair_successful(self, client, user_factory_model):
+    def test_obtain_token_pair_successful(self, client, user_factory):
         """Test of obtaining token pair sucessful."""
         user_data = {
             "username": "testuser1",
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(**user_data)
+        user_factory.create(**user_data)
 
         payload = {"email": user_data["email"], "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -82,14 +82,14 @@ class TestPublicUserAPI:
         assert "access" in response.data
         assert "refresh" in response.data
 
-    def test_obtain_token_pair_empty_email_error(self, client, user_factory_model):
+    def test_obtain_token_pair_empty_email_error(self, client, user_factory):
         """Test of obtaining token pair with empty email error."""
         user_data = {
             "username": "testuser1",
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(**user_data)
+        user_factory.create(**user_data)
 
         payload = {"email": "", "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -99,14 +99,14 @@ class TestPublicUserAPI:
         assert len(response.data["email"]) == 1
         assert response.data["email"][0].code == "blank"
 
-    def test_obtain_token_pair_empty_password_error(self, client, user_factory_model):
+    def test_obtain_token_pair_empty_password_error(self, client, user_factory):
         """Test of obtaining token pair with empty email error."""
         user_data = {
             "username": "testuser1",
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(**user_data)
+        user_factory.create(**user_data)
 
         payload = {"email": user_data["email"], "password": ""}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -116,14 +116,14 @@ class TestPublicUserAPI:
         assert len(response.data["password"]) == 1
         assert response.data["password"][0].code == "blank"
 
-    def test_refresh_token_successful(self, client, user_factory_model):
+    def test_refresh_token_successful(self, client, user_factory):
         """Test of refreshing token successful."""
         user_data = {
             "username": "testuser1",
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory_model.create(**user_data)
+        user_factory.create(**user_data)
 
         payload = {"email": user_data["email"], "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -156,14 +156,14 @@ class TestPublicUserAPI:
 class TestPrivateUserAPI:
     """Tests of private user API's"""
 
-    def test_retrive_user_information_successful(self, api_client, user_factory_model):
+    def test_retrive_user_information_successful(self, api_client, user_factory):
         """Test of retriving user information about logged user."""
         user_data = {
             "username": "testuser1",
             "email": "testuser1@example.com",
             "password": "testuser1pass",
         }
-        user = user_factory_model(**user_data)
+        user = user_factory(**user_data)
         auth_client = api_client(user=user)
 
         response = auth_client.get(ME_URL)
