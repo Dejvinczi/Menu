@@ -7,18 +7,21 @@ from django.urls import (
     include,
 )
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 
-from .views import (
-    MenuViewSet,
-    DishViewSet,
-)
+from menu.api import views
 
-d_router = DefaultRouter()
-d_router.register("menus", MenuViewSet)
-d_router.register("dishes", DishViewSet)
+# menus
+menu_router = DefaultRouter()
+menu_router.register(r"menus", views.MenuViewSet)
+
+# dishes
+dishes_router = routers.NestedSimpleRouter(menu_router, r"menus", lookup="menu")
+dishes_router.register(r"dishes", views.DishViewSet, basename="id")
 
 app_name = "menu"
 
 urlpatterns = [
-    path("", include(d_router.urls)),
+    path("", include(menu_router.urls)),
+    path("", include(dishes_router.urls)),
 ]
