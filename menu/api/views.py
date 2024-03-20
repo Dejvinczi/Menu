@@ -3,33 +3,35 @@ Menu module API views.
 """
 
 from django.db.models import Count
-from rest_framework import viewsets
+from rest_framework import (
+    viewsets,
+    mixins,
+    permissions,
+)
 
-from ..models import (
-    Menu,
-    Dish,
-)
-from .permission import IsAuthenticatedOrReadOnly
-from .serializers import (
-    MenuSerializer,
-    DishSerializer,
-)
+from menu import models
+from menu.api import serializers
 
 
 class MenuViewSet(viewsets.ModelViewSet):
-    queryset = Menu.objects.prefetch_related("dishes").all()
-    serializer_class = MenuSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    queryset = models.Menu.objects.prefetch_related("dishes").all()
+    serializer_class = serializers.MenuSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return self.queryset.annotate(dishes_number=Count("dishes")).filter(
-                count_dishes__gt=1
+                dishes_number__gt=1
             )
 
         return self.queryset
 
 
-class DishViewSet(viewsets.ModelViewSet):
-    queryset = Dish.objects.all()
-    serializer_class = DishSerializer
+class DishViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = models.Dish.objects.all()
+    serializer_class = serializers.DishSerializer
