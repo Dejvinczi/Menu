@@ -9,3 +9,6 @@ htmlcov/
 
 __pycache__/
 .pytest_cache/
+
+media/
+staticfiles/
