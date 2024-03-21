@@ -19,6 +19,18 @@ class DishSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "added_on", "updated_on")
 
 
+class DishImageSerializer(serializers.ModelSerializer):
+    """Serializer for dish image uploading."""
+
+    image = serializers.ImageField()
+
+    class Meta:
+        model = Dish
+        fields = ("id", "image")
+        read_only_fields = ("id",)
+        extra_kwargs = {"image": {"write_only": True}}
+
+
 class MenuSerializer(serializers.ModelSerializer):
     """Menu serializer."""
 

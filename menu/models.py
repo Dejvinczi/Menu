@@ -3,6 +3,8 @@ Database menu module models.
 """
 
 from decimal import Decimal
+import os
+import uuid
 
 from django.db import models
 from django.core.validators import (
@@ -20,6 +22,14 @@ class Menu(models.Model):
     updated_on = models.DateField(auto_now=True)
 
 
+def dish_image_file_path(instance, filename):
+    """Generate file path for dish image."""
+    ext = os.path.splitext(filename)[1]
+    filename = f"{uuid.uuid4()}{ext}"
+
+    return os.path.join("uploads", "dish", filename)
+
+
 class Dish(models.Model):
     """Database dish model."""
 
@@ -33,5 +43,6 @@ class Dish(models.Model):
     )
     preparation_time = models.DurationField()
     is_vegetarian = models.BooleanField(default=False)
+    image = models.ImageField(null=True, upload_to=dish_image_file_path)
     added_on = models.DateField(auto_now_add=True)
     updated_on = models.DateField(auto_now=True)
