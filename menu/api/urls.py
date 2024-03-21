@@ -24,5 +24,5 @@ app_name = "menu"
 
 urlpatterns = [
     path("", include(menu_router.urls), name="menus"),
-    path("", include(dishes_router.urls), name="dish"),
+    path("", include(dishes_router.urls), name="dishes"),
 ]
