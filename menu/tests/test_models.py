@@ -64,3 +64,4 @@ class TestMenuModel:
         assert dish.preparation_time == dish_data["preparation_time"]
         assert dish.is_vegetarian == dish_data["is_vegetarian"]
         assert dish.image.read() == test_image_file.content
+        dish.image.delete()

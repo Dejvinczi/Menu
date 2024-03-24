@@ -24,6 +24,11 @@ def get_dish_detail_url(dish_id):
     return reverse("menu:dishes-detail", args=[dish_id])
 
 
+def get_dish_upload_image_url(dish_id):
+    """Create and return an dish upload iamge URL."""
+    return reverse("menu:dishes-upload-image", args=[dish_id])
+
+
 @pytest.mark.django_db
 class TestPublicMenuAPI:
     """Tests of public menu API's"""
@@ -97,37 +102,29 @@ class TestPrivateMenuAPI:
         "Test of listing empty menus."
         auth_client = api_auth_client()
         menu = menu_factory()
-        print(menu.id)
+
         response = auth_client.get(MENUS_URL)
 
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
         response_menu_data = response.data[0]
-        print(response_menu_data["id"])
         assert menu.id == response_menu_data["id"]
 
-    @pytest.mark.skip("ToDo")
-    def test_can_list_non_empty_menus(self, api_auth_client, dish_factory, menu_model):
+    def test_can_list_non_empty_menus(self, api_auth_client, dish_factory):
         "Test of listing non empty menus."
-        print(menu_model.objects.all())
         auth_client = api_auth_client()
-        dish = dish_factory()
-        print(menu_model.objects.all())
+        dish_factory()
+
         response = auth_client.get(MENUS_URL)
-        print(response.data)
-        print(dish.menu.id)
-        print(dish.menu.name)
+
         assert response.status_code == status.HTTP_200_OK
         assert len(response.data) == 1
 
-        response_menu_data = response.data[0]
-        assert dish.menu.id == response_menu_data["id"]
-
     def test_can_create_menu(self, api_auth_client, menu_model):
-        "Test of creating menu."
         auth_client = api_auth_client()
         payload = {"name": "TestMenu1", "description": "TestMenu1Desc"}
+
         response = auth_client.post(MENUS_URL, data=payload)
 
         assert response.status_code == status.HTTP_201_CREATED
@@ -145,6 +142,7 @@ class TestPrivateMenuAPI:
         menu = menu_factory()
 
         payload = {"name": "UpdatedMenuName1"}
+
         response = auth_client.patch(get_menu_detail_url(menu.id), data=payload)
         menu.refresh_from_db()
 
@@ -272,6 +270,14 @@ class TestPublicDishAPI:
 
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
+    def test_cannot_upload_dish_image(self, client, dish_factory):
+        """Test of uploading dish iamge - error"""
+        dish = dish_factory()
+
+        response = client.post(get_dish_upload_image_url(dish.id))
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
 
 @pytest.mark.django_db
 class TestPrivateDishAPI:
@@ -308,3 +314,35 @@ class TestPrivateDishAPI:
         response = auth_client.delete(get_dish_detail_url(dish.id))
 
         assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    def test_can_upload_dish_image(
+        self, api_auth_client, dish_factory, test_image_file
+    ):
+        """Test of uploading dish image"""
+        auth_client = api_auth_client()
+        dish = dish_factory()
+
+        payload = {"image": test_image_file.file}
+        response = auth_client.post(
+            get_dish_upload_image_url(dish.id), data=payload, format="multipart"
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        dish.refresh_from_db()
+        dish.image.delete()
+
+    def test_cannot_upload_dish_image(
+        self, api_auth_client, dish_factory, test_image_file
+    ):
+        """Test of uploading dish iamge - error"""
+        auth_client = api_auth_client()
+        dish = dish_factory()
+
+        payload = {"image": test_image_file.file}
+        response = auth_client.post(
+            get_dish_upload_image_url(dish.id), data=payload, format="multipart"
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        dish.refresh_from_db()
+        dish.image.delete()

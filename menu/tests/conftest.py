@@ -3,6 +3,9 @@ Configuration our tests user module tests.
 """
 
 import pytest
+
+from io import BytesIO
+from PIL import Image
 from dataclasses import dataclass
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -70,12 +73,20 @@ class TestImageFile:
 
 @pytest.fixture(scope="function")
 def test_image_file():
+    f = BytesIO()
+    image = Image.new("RGB", (100, 100))
+    image.save(f, "png")
+    f.seek(0)
+
     file_name = "test_image.jpg"
-    file_content = b"test_content"
+    file_content = f.read()
+
     file = SimpleUploadedFile(
         name=file_name,
         content=file_content,
         content_type="image/jpeg",
     )
+
     yield TestImageFile(file_name, file_content, file)
+
     file.close()
