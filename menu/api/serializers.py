@@ -11,12 +11,12 @@ from ..models import (
 
 
 class DishSerializer(serializers.ModelSerializer):
-    """Dish serializer."""
+    """Serializer for dish."""
 
     class Meta:
         model = Dish
         exclude = ("menu",)
-        read_only_fields = ("id", "added_on", "updated_on")
+        read_only_fields = ("id", "added_on", "updated_on", "image")
 
 
 class DishImageSerializer(serializers.ModelSerializer):
@@ -32,20 +32,20 @@ class DishImageSerializer(serializers.ModelSerializer):
 
 
 class MenuSerializer(serializers.ModelSerializer):
-    """Menu serializer."""
+    """Serializer for menu."""
 
     class Meta:
         model = Menu
-        fields = "__all__"
+        fields = ("id", "name", "description", "added_on", "updated_on")
         read_only_fields = ("id", "added_on", "updated_on")
 
 
-class MenuDetailSerializer(MenuSerializer):
-    """Menu detail serializer."""
+class MenuDetailSerializer(serializers.ModelSerializer):
+    """Detail serializer for menu."""
 
     dishes = DishSerializer(many=True, read_only=True)
 
-    class Meta(MenuSerializer.Meta):
+    class Meta:
         model = Menu
         fields = "__all__"
         read_only_fields = ("id", "added_on", "updated_on")

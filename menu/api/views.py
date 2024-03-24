@@ -3,7 +3,7 @@ Menu module API views.
 """
 
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, get_list_or_404
 from rest_framework import (
     viewsets,
     mixins,
@@ -27,7 +27,7 @@ class MenuViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         match self.action:
-            case "list":
+            case "list" | "create":
                 return serializers.MenuSerializer
             case _:
                 return self.serializer_class
@@ -48,10 +48,19 @@ class MenuDishViewSet(
 
     queryset = models.Dish.objects.all()
     serializer_class = serializers.DishSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         menu = get_object_or_404(models.Menu, pk=self.kwargs["menu_pk"])
-        return self.queryset.filter(menu=menu)
+
+        if not self.request.user.is_authenticated:
+            return get_list_or_404(
+                self.queryset.annotate(menu__dishes_number=Count("menu__dishes")),
+                menu__dishes_number__gte=1,
+                menu=menu,
+            )
+
+        return self.queryset
 
     def perform_create(self, serializer):
         menu_pk = self.kwargs["menu_pk"]
@@ -80,7 +89,7 @@ class DishViewSet(
         methods=["POST"],
         url_path="upload-image",
     )
-    def upload_image(self, request, menu_pk, pk):
+    def upload_image(self, request, pk=None):
         """Upload an image to dish."""
         dish = self.get_object()
         serializer = self.get_serializer(dish, data=request.data)

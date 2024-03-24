@@ -43,7 +43,7 @@ class TestPublicUserAPI:
             "email": "testuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(email=payload["email"])
+        user_factory(email=payload["email"])
         response = client.post(REGISTER_USER_URL, data=payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -58,7 +58,7 @@ class TestPublicUserAPI:
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(username=payload["username"])
+        user_factory(username=payload["username"])
         response = client.post(REGISTER_USER_URL, data=payload)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -73,7 +73,7 @@ class TestPublicUserAPI:
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(**user_data)
+        user_factory(**user_data)
 
         payload = {"email": user_data["email"], "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -89,7 +89,7 @@ class TestPublicUserAPI:
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(**user_data)
+        user_factory(**user_data)
 
         payload = {"email": "", "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -106,7 +106,7 @@ class TestPublicUserAPI:
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(**user_data)
+        user_factory(**user_data)
 
         payload = {"email": user_data["email"], "password": ""}
         response = client.post(TOKEN_PAIR_URL, data=payload)
@@ -123,7 +123,7 @@ class TestPublicUserAPI:
             "email": "anothertestuser1@example.com",
             "password": "testuser1pass",
         }
-        user_factory.create(**user_data)
+        user_factory(**user_data)
 
         payload = {"email": user_data["email"], "password": user_data["password"]}
         response = client.post(TOKEN_PAIR_URL, data=payload)

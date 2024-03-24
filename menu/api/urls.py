@@ -13,16 +13,16 @@ from menu.api import views
 
 # menus
 menu_router = DefaultRouter()
-menu_router.register(r"menus", views.MenuViewSet)
-menu_router.register(r"dishes", views.DishViewSet)
+menu_router.register(r"menus", views.MenuViewSet, basename="menus")
+menu_router.register(r"dishes", views.DishViewSet, basename="dishes")
 
 # menu dishes
 dishes_router = routers.NestedSimpleRouter(menu_router, r"menus", lookup="menu")
-dishes_router.register(r"dishes", views.MenuDishViewSet, basename="id")
+dishes_router.register(r"dishes", views.MenuDishViewSet, basename="menu-dishes")
 
 app_name = "menu"
 
 urlpatterns = [
-    path("", include(menu_router.urls), name="menus"),
-    path("", include(dishes_router.urls), name="dishes"),
+    path("", include(menu_router.urls)),
+    path("", include(dishes_router.urls)),
 ]
