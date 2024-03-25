@@ -18,8 +18,8 @@ class Menu(models.Model):
 
     name = models.CharField(max_length=255, unique=True)
     description = models.TextField(max_length=500, blank=True)
-    added_on = models.DateField(auto_now_add=True)
-    updated_on = models.DateField(auto_now=True)
+    added_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
 
 
 def dish_image_file_path(instance, filename):
@@ -44,5 +44,5 @@ class Dish(models.Model):
     preparation_time = models.DurationField()
     is_vegetarian = models.BooleanField(default=False)
     image = models.ImageField(null=True, upload_to=dish_image_file_path)
-    added_on = models.DateField(auto_now_add=True)
-    updated_on = models.DateField(auto_now=True)
+    added_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
