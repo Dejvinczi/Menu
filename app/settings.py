@@ -212,7 +212,7 @@ CELERY_TIMEZONE = TIME_ZONE
 CELERY_BEAT_SCHEDULE = {
     "send-notification-updated-menu-email": {
         "task": "menu.tasks.send_emails_with_updated_menu_information_to_users",
-        "schedule": crontab(minute="*"),
+        "schedule": crontab(hour=6, minute=0),
     },
 }
 
