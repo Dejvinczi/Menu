@@ -18,31 +18,31 @@ from menu.models import Menu, Dish
 from menu.tests.factories import MenuFactory, DishFactory
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def menu_factory():
     """Fixture to provide MenuFactory."""
     return MenuFactory
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def dish_factory():
     """Fixture to provide DishFactory."""
     return DishFactory
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def menu_model():
     """Fixture to provide Menu model"""
     return Menu
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def dish_model():
     """Fixture to provide Dish model"""
     return Dish
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def api_auth_client():
     """Fixture to provide authorized client if you specify the user."""
 
@@ -71,8 +71,9 @@ class TestImageFile:
     file: SimpleUploadedFile
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def test_image_file():
+    """Fixture to provide TestImageFile dataclass with image."""
     f = BytesIO()
     image = Image.new("RGB", (100, 100))
     image.save(f, "png")
@@ -90,3 +91,8 @@ def test_image_file():
     yield TestImageFile(file_name, file_content, file)
 
     file.close()
+
+
+@pytest.fixture
+def email_backend_setup(settings):
+    settings.EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
