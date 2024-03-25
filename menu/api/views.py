@@ -12,7 +12,11 @@ from rest_framework import (
 )
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.parsers import (
+    JSONParser,
+    MultiPartParser,
+    FormParser,
+)
 
 from menu import models
 from menu.api import serializers
@@ -75,7 +79,7 @@ class DishViewSet(
 ):
     queryset = models.Dish.objects.all()
     serializer_class = serializers.DishSerializer
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (JSONParser, MultiPartParser, FormParser)
 
     def get_serializer_class(self):
         match self.action:
