@@ -12,3 +12,5 @@ __pycache__/
 
 media/
 staticfiles/
+
+celerybeat-schedule
