@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification of menu news!</title>
+</head>
+<body>
+    {% for menu, dishes in data.items %}
+    <b>{{ menu.name }}:</b> 
+    <ul>
+        {% for dish in dishes %}
+        <li>
+            <p><b>Name:</b> {{ dish.name }} {% if dish.is_vegetarian %} <b>VEGE</b> {% endif %}</p>
+            <p><b>Description:</b> {{ dish.description }}</p>
+            <p><b>Price:</b> {{ dish.price }}</p>
+            <p><b>Preparation time:</b> {{ dish.preparation_time }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</body>
+</html>
