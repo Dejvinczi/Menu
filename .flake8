@@ -4,6 +4,8 @@ exclude =
     __pycache__,
     migrations,
     manage.py,
-    settings.py,
+    app/settings/production.py,
+    app/settings/development.py,
+    app/settings/base.py,
     *venv*,
 max-line-length = 88
