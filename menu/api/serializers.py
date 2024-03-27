@@ -4,19 +4,20 @@ Menu module API serializers.
 
 from rest_framework import serializers
 
-from ..models import (
-    Menu,
-    Dish,
-)
+from app.helpers.serializers import DateTimeWithTimeZone
+from menu import models
 
 
 class DishSerializer(serializers.ModelSerializer):
     """Serializer for dish."""
 
+    added_on = DateTimeWithTimeZone(read_only=True)
+    updated_on = DateTimeWithTimeZone(read_only=True)
+
     class Meta:
-        model = Dish
+        model = models.Dish
         exclude = ("menu",)
-        read_only_fields = ("id", "added_on", "updated_on", "image")
+        read_only_fields = ("id", "image")
 
 
 class DishImageSerializer(serializers.ModelSerializer):
@@ -25,7 +26,7 @@ class DishImageSerializer(serializers.ModelSerializer):
     image = serializers.ImageField()
 
     class Meta:
-        model = Dish
+        model = models.Dish
         fields = ("id", "image")
         read_only_fields = ("id",)
         extra_kwargs = {"image": {"write_only": True}}
@@ -34,18 +35,23 @@ class DishImageSerializer(serializers.ModelSerializer):
 class MenuSerializer(serializers.ModelSerializer):
     """Serializer for menu."""
 
+    added_on = DateTimeWithTimeZone(read_only=True)
+    updated_on = DateTimeWithTimeZone(read_only=True)
+
     class Meta:
-        model = Menu
+        model = models.Menu
         fields = ("id", "name", "description", "added_on", "updated_on")
-        read_only_fields = ("id", "added_on", "updated_on")
+        read_only_fields = ("id",)
 
 
 class MenuDetailSerializer(serializers.ModelSerializer):
     """Detail serializer for menu."""
 
+    added_on = DateTimeWithTimeZone(read_only=True)
+    updated_on = DateTimeWithTimeZone(read_only=True)
     dishes = DishSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Menu
+        model = models.Menu
         fields = "__all__"
-        read_only_fields = ("id", "added_on", "updated_on")
+        read_only_fields = ("id",)
