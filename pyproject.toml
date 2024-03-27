@@ -3,7 +3,7 @@ line-length = 88
 target-version = ['py37', 'py38', 'py39', 'py310', 'py311', 'py312']
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "app.settings"
+DJANGO_SETTINGS_MODULE = "app.settings.development"
 addopts = "--create-db --cov=./ --cov-report=term"
 
 [tool.coverage.run]
