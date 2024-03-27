@@ -3,12 +3,13 @@ Menu module API views.
 """
 
 from django.db.models import Count
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework import (
     viewsets,
     mixins,
     permissions,
     status,
+    exceptions,
 )
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -19,15 +20,16 @@ from rest_framework.parsers import (
 )
 
 from menu import models
-from menu.api import serializers
+from menu.api import serializers, filters
 
 
 class MenuViewSet(viewsets.ModelViewSet):
     """API view set for menu."""
 
-    queryset = models.Menu.objects.prefetch_related("dishes").all()
+    queryset = models.Menu.objects.all()
     serializer_class = serializers.MenuDetailSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filterset_class = filters.MenuFilter
 
     def get_serializer_class(self):
         match self.action:
@@ -38,8 +40,8 @@ class MenuViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            return self.queryset.annotate(dishes_number=Count("dishes")).filter(
-                dishes_number__gte=1
+            return self.queryset.annotate(dishes_num=Count("dishes")).filter(
+                dishes_num__gte=1
             )
 
         return self.queryset
@@ -52,17 +54,17 @@ class MenuDishViewSet(
 
     queryset = models.Dish.objects.all()
     serializer_class = serializers.DishSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filterset_class = filters.DishFilter
 
     def get_queryset(self):
         menu = get_object_or_404(models.Menu, pk=self.kwargs["menu_pk"])
+        self.queryset = self.queryset.filter(menu=menu)
 
+        # Checks that menu is not empty (unathenticated users cannot seem them)
         if not self.request.user.is_authenticated:
-            return get_list_or_404(
-                self.queryset.annotate(menu__dishes_number=Count("menu__dishes")),
-                menu__dishes_number__gte=1,
-                menu=menu,
-            )
+            if menu.dishes.count() == 0:
+                raise exceptions.NotFound()
 
         return self.queryset
 
