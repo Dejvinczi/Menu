@@ -43,11 +43,19 @@ def dish_model():
 
 
 @pytest.fixture
+def api_client():
+    """Fixture to provide API api_client."""
+    return APIClient()
+
+
+@pytest.fixture
 def api_auth_client():
-    """Fixture to provide authorized client if you specify the user."""
+    """
+    Fixture to provide authorized API api_client with possible specific user or default.
+    """
 
     def create_api_auth_client(user=None):
-        client = APIClient()
+        api_client = APIClient()
 
         if user is None:
             user = get_user_model().objects.create_user(
@@ -57,9 +65,9 @@ def api_auth_client():
             )
 
         refresh = RefreshToken.for_user(user)
-        client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
+        api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {str(refresh.access_token)}")
 
-        return client
+        return api_client
 
     return create_api_auth_client
 
