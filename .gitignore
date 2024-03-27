@@ -1,16 +1,22 @@
+# vscode
 .vscode
 
-venv
+# env variables
 .env
 
+# python
+venv
+__pycache__/
+.pytest_cache/
+
+# tests coverage
 .coveragerc
 .coverage
 htmlcov/
 
-__pycache__/
-.pytest_cache/
-
+# media and static files
 media/
 staticfiles/
 
+# celery and celery-beat
 celerybeat-schedule
