@@ -12,6 +12,7 @@ click-repl==0.3.0
 coverage==7.4.3
 Django==5.0.3
 django-cleanup==8.1.0
+django-filter==24.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 drf-nested-routers==0.93.5
