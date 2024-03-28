@@ -37,7 +37,7 @@ else
 fi
 
 # Load environment variables from .env file
-echo -e "${YELLOW}2. Export .env variables stage.${NC}"
+echo -e "${YELLOW}2. Load environment variables from .env file stage.${NC}"
 if [ -f .env ]; then
     echo -e "   - Exporting .env variables.."
     set -o allexport
