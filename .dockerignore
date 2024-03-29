@@ -1,0 +1,40 @@
+# vscode
+.vscode
+
+# git
+.git
+.gitignore
+
+# env variables
+.env
+.env.template
+
+# python
+.venv
+venv
+__pycache__/
+.pytest_cache/
+pyproject.toml
+.flake8
+
+# tests covereage
+.coveragerc
+.coverage
+htmlcov/
+
+# media and static files
+media/
+staticfiles/
+
+# celery and celery-beat
+celerybeat-schedule
+
+# scripts
+./start.sh
+
+# others
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
