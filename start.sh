@@ -71,6 +71,7 @@ fi
 
 # Make db model migrations
 echo -e "${YELLOW}4. Migrate database migrations stage.${NC}"
+python manage.py wait_for_db 
 echo -e "   - Starting migrate.."
 python manage.py migrate
 echo -e "${GREEN}   - Successfully!${NC}";
@@ -82,12 +83,12 @@ echo -e "${YELLOW}5. Start server stage.${NC}"
 if [[ "$DEBUG" =~ ^("true"|"True")$ ]]; then
     echo -e "   - Starting development server.."
     export DJANGO_SETTINGS_MODULE="app.settings.development"
-    python manage.py runserver $HOST:$PORT;
+    python manage.py runserver 0.0.0.0:8000;
     exit 0
 else
     echo -e "   - Starting production server.."
     export DJANGO_SETTINGS_MODULE="app.settings.production"
     python manage.py collectstatic --no-input
-    gunicorn app.wsgi:application --bind $HOST:$PORT;
+    gunicorn app.wsgi:application --bind 0.0.0.0:8000;
     exit 0
 fi
