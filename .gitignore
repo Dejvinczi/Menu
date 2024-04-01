@@ -15,8 +15,7 @@ __pycache__/
 htmlcov/
 
 # media and static files
-media/
-staticfiles/
+static/
 
 # celery and celery-beat
 celerybeat-schedule
