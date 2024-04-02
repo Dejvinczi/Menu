@@ -9,6 +9,9 @@ A simple application based on Django and the Django Rest Framework for managing 
 - [Getting Started](#getting-started)
   - [Installation](#installation)
   - [Usage](#usage)
+- [API Documentation](#api-documentation)
+
+
 ## Features
 - **Menu overview**: Unauthorised users are able to view the menus created for preview purposes.
 - **Menu management**: Authorised users of the system can manage (view, create, edit, delete) menu tabs. 
@@ -82,3 +85,9 @@ The script is divided into several stages: Depending on the DEBUG setting, it cr
     ```bash
     docker-compose -f <docker_compose_file> up
     ```
+
+## API Documentation
+The API documentation is available at:<br /> 
+**http://127.0.0.1:8000/api/schema/swagger-ui/**<br />
+it is also possible to download the schema at:<br />
+**http://127.0.0.1:8000/api/schema/**.
